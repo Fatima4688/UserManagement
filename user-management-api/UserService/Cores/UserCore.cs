@@ -20,5 +20,15 @@ namespace UserService.Cores
             
         }
 
+        public async Task DeleteUser(Guid userId)
+        {
+            User? user = await _db.Users.FirstOrDefaultAsync(userEntry=> userEntry.Id.Equals(userId));
+            if(user is not null)
+            {
+                _db.Users.Remove(user);
+                await _db.SaveChangesAsync();
+            }
+        }
+
     }
 }

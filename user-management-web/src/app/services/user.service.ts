@@ -19,4 +19,9 @@ export class UserService {
     const url= `${this.apiUrl}/create-user`
     return this.http.post(url, user);
   }
+
+deleteUser(userId: string) {
+  const url = `${this.apiUrl}/delete-user/${userId}`;
+  return this.http.delete(url);
+}
 }

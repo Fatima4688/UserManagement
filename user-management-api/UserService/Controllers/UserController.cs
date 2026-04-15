@@ -22,6 +22,14 @@ namespace MissionManagerApi.Controllers
             return StatusCode(response.Status, response.Response);
         }
 
+        [HttpDelete]
+        [Route("delete-user/{userId}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
+        {
+            Common.ViewModels.ResponseViewModel response = await _userService.DeleteUser(userId);
+            return StatusCode(response.Status, response.Response);
+        }
+
         [HttpGet]
         [Route("get-users")]
         public async Task<IActionResult> GetUsers()

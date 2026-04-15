@@ -7,6 +7,7 @@
       <tr style="background-color: #f0f0f0;">
         <th>Name</th>
         <th>Email</th>
+        <th>Actions</th>
       </tr>
     </thead>
 
@@ -14,6 +15,9 @@
       <tr *ngFor="let user of users">
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
+        <td><button (click)="deleteUser(user.id)" style="cursor: pointer;">
+          🗑️ Delete
+        </button></td>
       </tr>
 
       <tr *ngIf="users.length === 0">

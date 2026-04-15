@@ -10,6 +10,7 @@ namespace UserService.Extensions
             services.AddScoped<IUserService, Services.UserService>();
             services.AddScoped<IUserCore, Cores.UserCore>();
             services.AddSingleton<IMessageBusService, MessageBusService>();
+            services.AddHttpClient<IUserService, Services.UserService>();
 
             return services;
         }

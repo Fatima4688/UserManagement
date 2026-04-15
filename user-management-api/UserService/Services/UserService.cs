@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Net.Http;
 using System.Text.Json;
 using Common.ViewModels;
 using UserService.Cores;
@@ -13,10 +14,12 @@ namespace UserService.Services
     {
         private readonly IUserCore _userCore;
         private readonly IMessageBusService _messageBus;
-        public UserService(IUserCore userCore, IMessageBusService messageBus)
+        private readonly HttpClient _httpClient;
+        public UserService(IUserCore userCore, IMessageBusService messageBus, HttpClient httpClient)
         {
             _userCore = userCore;
             _messageBus = messageBus;
+            _httpClient = httpClient;
         }
 
         public async Task<ResponseViewModel> CreateUser(User user)
@@ -33,13 +36,43 @@ namespace UserService.Services
                 });
 
                 response.Status = StatusCodes.Status200OK;
-                response.Response = "User created";
+                response.Response = new ResponseOk();
                 return response;
             }
             catch
             {
                 response.Status = StatusCodes.Status500InternalServerError;
-                response.Response = "User not created";
+                response.Response = new ResponseOk();
+                return response;
+            }
+        }
+
+        public async Task<ResponseViewModel> DeleteUser(Guid userId)
+        {
+            ResponseViewModel response = new();
+            try
+            {
+                var url = $"http://localhost:7089/api/users/{userId}";
+
+                var httpResponse = await _httpClient.DeleteAsync(url);
+
+                if (!httpResponse.IsSuccessStatusCode)
+                {
+                    response.Status = StatusCodes.Status500InternalServerError;
+                    response.Response = "Function failed to delete user";
+                    return response;
+                }
+
+                await _userCore.DeleteUser(userId);
+
+                response.Status = StatusCodes.Status200OK;
+                response.Response = new ResponseOk();
+                return response;
+            }
+            catch
+            {
+                response.Status = StatusCodes.Status500InternalServerError;
+                response.Response = new ResponseOk();
                 return response;
             }
         }

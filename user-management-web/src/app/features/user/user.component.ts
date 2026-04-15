@@ -18,7 +18,7 @@ export class UserComponent implements OnInit {
     const message = navigation?.extras.state?.['message'];
 
     if (message) {
-      alert(message); // simple browser alert
+      alert(message); 
     }
   }
 
@@ -28,5 +28,17 @@ export class UserComponent implements OnInit {
   
 goToUpdateUser() {
   this.router.navigate(['/update-user']);
+}
+
+deleteUser(userId: string) {
+  this.userService.deleteUser(userId).subscribe({
+    next: (response: any) => {
+      this.loadUsers();
+    },
+    error: (error) => {
+      console.error("Delete failed:", error);
+      alert("Something went wrong while deleting user");
+    }
+  });
 }
 }
